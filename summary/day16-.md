@@ -21,9 +21,11 @@ return (
 ```
 211p에 useRef로 로컬 변수 사용하는 법을 설명하면서, useRef(여기)에 초기값을 null이 아닌 걸 넣고 활용하는데 쓰임새가 정확히 이해는 가지 않았음.
 
+<br>
+
 #### 200113 Day 17 - 218~224p
 컴포넌트 스타일링(221p) :
-1.클래스 이름에 컴포넌트 이름을 포함시킴으로써 다른 컴포넌트에서 실수로 중복되는 클래스를 만들어 사용하는 것을 방지할 수 있죠.
+클래스 이름에 컴포넌트 이름을 포함시킴으로써 다른 컴포넌트에서 실수로 중복되는 클래스를 만들어 사용하는 것을 방지할 수 있죠.
 ```css
 .App-logo {
 	/* ... */
@@ -44,6 +46,8 @@ CSS Selector를 사용하면 CSS 클래스가 특정 클래스 내부에 있는 
 }
 ```
 
+<br>
+
 #### 200114 Day 18 - 324~332p
 리액트 라우터 적용하기 :
 프로젝트에 리액트 라우터를 적용할 때는 src/index.js 파일에서 react-router-dom에 내장되어 있는 BrowserRouter라는 컴포넌트를 사용하여 감싸면 됩니다. 이 컴포넌트는 웹 애플리케이션에 **HTML5의 History API를 사용**하여 페이지를 새로고침하지 않고도 주소를 변경하고, 현재 주소에 관련된 정보를 props로 쉽게 조회하거나 사용할 수 있도록 해줍니다. (327p)
@@ -61,6 +65,8 @@ ReactDOM.render(
 );
 ```
 2주 프로젝트에 라우터를 사용해야 해서 이부분으로 뛰어넘어옴. Route, Link 컴포넌트 실습함.
+
+<br>
 
 #### 200114 Day 19 - 333~338p
 `/profile/username` 처럼 뒷부분에 유동적인 `username` 값을 넣어줄 때, 해당 값을 `props`로 받아 와서 조회하는 방법 (336p)
@@ -85,3 +91,44 @@ const Profile = ({ match }) => {
   const profile = data[username];
 ```
 `sgyoon`을 파라미터로 넘겼을 때 `match` 객체 구성
+
+<br>
+
+#### 200308 Day 20 - 225~p
+$를 머리에 붙여 변수 선언, @mixin으로 스타일 함수 선언, @include로 @mixin 함수 사용하기 (225p)
+...여러 파일에서 사용될 수 있는 Sass 변수 및 믹스인은 파일을 따로 작성하여 사용가능 (227p)
+```css
+// styles/utils.scss 파일
+// 변수 사용
+$red: #fa5252;
+
+@mixin square($size) {
+  // calculated라는 변수를 사용해서 수치를 계산 및 저장
+  $calculated: 32px * $size;
+  // 내가 만든 변수가 아닌 건 $없이 사용
+  width: $calculated;
+  height: $calculated;
+}
+```
+```css
+// SassComponent.scss 파일
+// 다른 scss 파일을 @import로 가져와 사용
+@import './styles/utils';
+
+.SassComponent {
+  display: flex;
+  .box { // .SassComponent .box와 동일
+    background: red;
+    cursor: pointer;
+    transition: all 0.3s ease-in;
+    &.red { // .SassComponent .box .red
+      background: $red;
+      @include square(1); // mixin을 사용할 땐 include
+    }
+    &:hover {
+    // .SassComponent .box 에 마우스를 올렸을 때
+    background: black;
+    }
+  }
+}
+```
