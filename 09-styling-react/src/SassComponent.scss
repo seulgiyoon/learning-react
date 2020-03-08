@@ -1,20 +1,43 @@
-$red: #fa5252;
-$orange: #fd7e14;
-$yellow: #fcc419;
-$green: #40c057;
-$blue: #339af0;
-$indigo: #5c7cfa;
-$violet: #7950f2;
+// 변수와 mixin을 가져와 사용할 땐 @import
+@import './styles/utils';
 
-// 믹스인. 재사용되는 스타일 블록을 함수처럼 사용할 수 있음.
-// 여기 주석 JS타입이네?
-
-@mixin square($size) {
-  // calculated라는 변수를 사용해서 수치를 계산 및 저장
-  $calculated: 32px * $size;
-  // 내가 만든 변수가 아닌 건 $없이 사용
-  width: $calculated;
-  height: $calculated;
+.SassComponent {
+  display: flex;
+  .box { // .SassComponent .box와 동일
+    background: red;
+    cursor: pointer;
+    transition: all 0.3s ease-in;
+    &.red { // .SassComponent .box .red
+      background: $red;
+      @include square(1); // mixin을 사용할 땐 include
+    }
+    &.orange {
+      background: $orange;
+      @include square(2);
+    }
+    &.yellow {
+      background: $yellow;
+      @include square(3);
+    }
+    &.green {
+      background: $green;
+      @include square(4);
+    }
+    &.blue {
+      background: $blue;
+      @include square(5);
+    }
+    &.indigo {
+      background: $indigo;
+      @include square(6);
+    }
+    &.violet {
+      background: $violet;
+      @include square(7);
+    }
+    &:hover {
+      // .SassComponent .box 에 마우스를 올렸을 때
+      background: black;
+    }
+  }
 }
-
-// 225p에서 계속
