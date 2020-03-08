@@ -1,5 +1,5 @@
 // 변수와 mixin을 가져와 사용할 땐 @import
-@import './styles/utils';
+@import 'utils.scss';
 
 .SassComponent {
   display: flex;
