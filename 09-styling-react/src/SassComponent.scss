@@ -1,0 +1,20 @@
+$red: #fa5252;
+$orange: #fd7e14;
+$yellow: #fcc419;
+$green: #40c057;
+$blue: #339af0;
+$indigo: #5c7cfa;
+$violet: #7950f2;
+
+// 믹스인. 재사용되는 스타일 블록을 함수처럼 사용할 수 있음.
+// 여기 주석 JS타입이네?
+
+@mixin square($size) {
+  // calculated라는 변수를 사용해서 수치를 계산 및 저장
+  $calculated: 32px * $size;
+  // 내가 만든 변수가 아닌 건 $없이 사용
+  width: $calculated;
+  height: $calculated;
+}
+
+// 225p에서 계속
