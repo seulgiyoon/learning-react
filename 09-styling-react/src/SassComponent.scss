@@ -1,8 +1,19 @@
 // 변수와 mixin을 가져와 사용할 땐 @import
-@import 'utils.scss';
+// sass-loader의 prependData옵션 적용하여 자동기입
+// @import 'utils.scss';
+
+// include-media -> 미디어쿼리 관리가 용이한 라이브러리
+// open-color -> 사용하기 편리하고 조화로운 색상들을 정의한 라이브러리
+@import '~include-media/dist/include-media';
+@import '~open-color/open-color';
 
 .SassComponent {
   display: flex;
+  background: $oc-yellow-2;
+  // 미디어 가로 크기가 768px 미만일 경우 라임색으로 배경색이 변한다
+  @include media('<768px') {
+    background: $oc-lime-3;
+  }
   .box { // .SassComponent .box와 동일
     background: red;
     cursor: pointer;
