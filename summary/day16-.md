@@ -95,9 +95,9 @@ const Profile = ({ match }) => {
 <br>
 
 #### 200308 Day 20 - 225~230p
-$를 머리에 붙여 변수 선언, @mixin으로 스타일 함수 선언, @include로 @mixin 함수 사용하기 (225p)
+$를 머리에 붙여 변수 선언, @mixin으로 스타일 함수 선언, @include로 @mixin 함수 사용하기 (225p)<br>
 ...여러 파일에서 사용될 수 있는 Sass 변수 및 믹스인은 파일을 따로 작성하여 사용가능 (227p)
-```css
+```scss
 // styles/utils.scss 파일
 // 변수 사용
 $red: #fa5252;
@@ -110,7 +110,7 @@ $red: #fa5252;
   height: $calculated;
 }
 ```
-```css
+```scss
 // SassComponent.scss 파일
 // 다른 scss 파일을 @import로 가져와 사용
 @import './styles/utils';
@@ -132,8 +132,8 @@ $red: #fa5252;
   }
 }
 ```
-import 시 길어지는 상대주소를 줄이고, 파일 이름만으로 가져오기가 가능하게 만들기 (229p)
-웹팩에서 Sass를 처리하는 sass-loader의 설정을 커스텀한다. create-react-app으로 만든 프로젝트는 많은 설정들이 숨겨져 있기 때문에, 우선 npm run eject 명령으로 추출한다.
+import 시 길어지는 상대주소를 줄이고, 파일 이름만으로 가져오기가 가능하게 만들기 (229p)<br>
+웹팩에서 Sass를 처리하는 sass-loader의 설정을 커스텀한다. create-react-app으로 만든 프로젝트는 많은 설정들이 숨겨져 있기 때문에, 우선 npm run eject 명령으로 추출한다.<br>
 이 때 책과는 달리 Create React App 2는 추출 없이 설정이 가능하다는 안내문이 떴다.
 ```
 Create React App 2+ supports TypeScript, Sass, CSS Modules and more without ejecting: https://reactjs.org/blog/2018/10/01/create-react-app-v2.html
@@ -177,4 +177,50 @@ https://github.com/gilbutITbook/080203/issues/2
     }),
   sideEffects: true,
 },
+```
+
+<br>
+
+#### 200309 Day 21 - 231~233p
+만약 항상 utils.scss의 함수와 변수를 사용한다면, 매번 파일 상단에 @import 'utils.scss';를 적지 않고 sass-loader에 옵션을 설정하여 자동으로 포함시킬 수 있다. (231p)<br>
+책에 나온 예시 코드가 에러가 발생해서 https://github.com/webpack-contrib/sass-loader 에서 `prependData`옵션을 찾았다.<br>
+2019년 8월 초판 발행 책이지만 변화가 빨라서인지 바뀌는 부분이 많다.
+```js
+{
+  test: sassRegex,
+  exclude: sassModuleRegex,
+  use: getStyleLoaders({
+      importLoaders: 2,
+      sourceMap: isEnvProduction && shouldUseSourceMap,
+    }).concat({
+      loader: require.resolve('sass-loader'),
+      options: {
+        sassOptions: {
+          includePaths: [paths.appSrc + '/styles'],
+          sourceMap: isEnvProduction && shouldUseSourceMap,
+        },
+        // 책에서는 data: `@import 'utils';`였던 부분
+        prependData: `@import 'utils';`,
+      }
+    }),
+  sideEffects: true,
+},
+```
+
+물결문자를 사용하면 import시에 라이브러리 경로를 짧게 줄일 수 있다. 주의점은 '~/'는 홈 디렉토리이므로 '~'단독으로만 적는다.<br>
+```scss
+// include-media -> 미디어쿼리 관리가 용이한 라이브러리
+// open-color -> 사용하기 편리하고 조화로운 색상들을 정의한 라이브러리
+@import '~include-media/dist/include-media';
+@import '~open-color/open-color';
+
+.SassComponent {
+  display: flex;
+  background: $oc-yellow-2;
+  // 미디어 가로 크기가 768px 미만일 경우 라임색으로 배경색이 변한다
+  @include media('<768px') {
+    background: $oc-lime-3;
+  }
+  // ... 다른 스타일들 ...
+}
 ```
