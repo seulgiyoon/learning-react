@@ -1,0 +1,21 @@
+/* wrapper와 inverted를 동시 적용할 경우에는 뒤에 적힌 inverted가 wrapper와 중복된 속성,
+   background, color를 덮어쓴다. 
+*/
+
+.wrapper {
+  background: black;
+  padding: 1rem;
+  color: white;
+  font-size: 2rem;
+}
+
+.inverted {
+  color: black;
+  background: white;
+  border: 1px solid black;
+}
+
+:global .something {
+  font-weight: 800;
+  color: aqua;
+}
