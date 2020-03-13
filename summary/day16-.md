@@ -227,7 +227,7 @@ https://github.com/gilbutITbook/080203/issues/2
 
 <br>
 
-#### 200310 Day 22 - 234~p
+#### 200310 Day 22 - 234~239p
 css 파일을 모듈화하여 사용하고 싶을 경우, CRA v2부터는 파일명 뒤에 .module을 붙여주면 알아서 인식한다. (234p)<br>
 ```css
 /* wrapper와 inverted를 동시 적용할 경우에는 뒤에 적힌 inverted가 wrapper와 중복된 속성,
@@ -291,3 +291,26 @@ function CssModule() {
 };
 ```
 styles 안에 어떤 값들이 있는지 바로 나온다면 좋겠는데. TypeScript로 가능할까?
+
+<br>
+
+#### 200313 Day 23 - 240~247p
+자바스크립트 파일 안에 스타일을 선언하는 'CSS-in-JS' 방식. 대표적인 라이브러리 styled-components.(241p)<br>
+styled-components는 Tagged templates의 속성을 이용해서 자바스크립트 함수나 객체를 온전히 추출할 수 있다.(245p)<br>
+```js
+// 엘리먼트 만들기
+import styled from 'styled-components';
+
+// styled.태그명
+const MyComponent = styled.div`
+`;
+
+// 혹은 태그의 타입을 styled 함수의 인자로 전달한다
+const MyInput = styled('input')`
+`;
+```
+
+더보기
+- [[ CSS 값과 단위 | MDN ]](https://developer.mozilla.org/ko/docs/Learn/CSS/Building_blocks/Values_and_units)
+- [[ CSS: 선택자(Selector) 이해 | Nextree ]](http://www.nextree.co.kr/p8468/)
+- [[ Template literals - Tagged templates | MDN ]](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Template_literals)
