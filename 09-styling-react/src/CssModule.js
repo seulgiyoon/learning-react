@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames/bind';
-import styles from './CSSModule.module.css';
+import styles from './CSSModule.module.scss';
 
 // CSSModule.module.css에서 styles 이 담긴 객체(내가 import 하면서 정한 이름으로. 여기서는 styles)를 전달받게 된다
 // 그래서 styles.스타일명 으로 스타일을 불러옴
