@@ -314,3 +314,29 @@ const MyInput = styled('input')`
 - [[ CSS 값과 단위 | MDN ]](https://developer.mozilla.org/ko/docs/Learn/CSS/Building_blocks/Values_and_units)
 - [[ CSS: 선택자(Selector) 이해 | Nextree ]](http://www.nextree.co.kr/p8468/)
 - [[ Template literals - Tagged templates | MDN ]](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Template_literals)
+
+<br>
+
+#### 200316 Day 24 - 248~252p
+조건부 스타일링 시 props를 사용하지 않는다면 css를 불러와 사용하지 않아도 괜찮지만, css를 사용하면 함수 인식 및 하이라이팅이 가능해서 편리하다. (249p)<br>
+미디어 쿼리 적용 시 함수를 사용할 수 있다. 이런 함수들은 모듈화 하여 여러곳에서 사용하면 편리. (251p)
+```js
+const sizes = {
+  desktop: 1024,
+  tablet: 768,
+};
+
+// sizes 안에 있는 크기들에 따라 @media (max-width: size){} 형태의 결과를 내는 함수를 생성하는 함수.
+// reduce로 media 객체 안에 생성된 함수는 desktop: (...args) => { return css style } 형태.
+// 인자로 미디어 크기에 따라 적용할 스타일을 넘긴다. media.desktop`width: 768px;`처럼 함수는 tagged 템플릿 리터럴 형태로 작성.
+// sizes에 입력된 수치는 em으로 바뀌도록 되어 있었는데 px로 해보았음.
+const media = Object.keys(sizes).reduce((acc, label) => {
+  acc[label] = (...args) => css`
+    @media (max-width: ${sizes[label]}px) {
+      ${css(...args)};
+    }
+  `;
+  console.log(acc);
+  return acc;
+}, {});
+```
