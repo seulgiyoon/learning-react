@@ -340,3 +340,25 @@ const media = Object.keys(sizes).reduce((acc, label) => {
   return acc;
 }, {});
 ```
+
+<br>
+
+#### 200317 Day 25 - 254~261p
+컴포넌트 파일을 components 디렉터리에 넣는 이유는 기능이나 구조상 필요하기 때문이 아니라 자주 사용되는 관습이기 때문 (257p)<br>
+작은 프로젝트에서는 사실상 폴더를 따로 만들어서 넣을 필요까지는 없는데 습관 형성상 + 관습 파악을 위해 한다는 의미인 듯<br>
+control+space는 VS Code의 자동완성 단축키. 컴포넌트 이름을 입력할 때 이 키로 자동완성 창을 열 수 있다.<br>
+```json
+// jsconfig.js
+// 자동완성을 위한 세팅 target: "es6" -> 이부분이 자동완성과 어떤 관련이 있는건지 연관성을 아직 이해 못함
+// 절대 경로를 사용할 수 있는 세팅 (e.g. '../components/button'이 아닌 'components/button')
+{
+  "compilerOptions": {
+    "target": "es6",
+    "baseUrl": "src"
+  },
+  "include": ["src"]
+}
+```
+
+- VS Code 에디터의 여러가지 설정을 할 수 있는 jsconfig.js [[ jsconfig.js란 ]](https://code.visualstudio.com/docs/languages/jsconfig)
+- SVG 아이콘을 컴포넌트처럼 사용 가능한 라이브러리 [[ react-icons ]](http://react-icons.netlify.com/#/)
