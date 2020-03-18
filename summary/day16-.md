@@ -362,3 +362,20 @@ control+space는 VS Code의 자동완성 단축키. 컴포넌트 이름을 입�
 
 - VS Code 에디터의 여러가지 설정을 할 수 있는 jsconfig.js [[ jsconfig.js란 ]](https://code.visualstudio.com/docs/languages/jsconfig)
 - SVG 아이콘을 컴포넌트처럼 사용 가능한 라이브러리 [[ react-icons ]](http://react-icons.netlify.com/#/)
+
+<br>
+
+#### 200318 Day 26 - 262~270p
+할 일을 입력하는 엘리먼트를 `<form>`태그로 만들었다는 점 기억하기
+```scss
+.TodoListItem {
+  // .TodoListItem이라는 클래스를 가졌으면서 짝수번째인 엘리먼트에 적용
+  &:nth-child(even) {
+    background: rgba(255, 127, 80, 0.2);
+  // 엘리먼트 사이에 테두리를 넣는다
+  & + & {
+    border-top: 1px solid coral;
+  }
+}
+```
+- [[ CSS: line-height 속성 이해하기 | 꿀벌개발일지 ]](https://ohgyun.com/572)
