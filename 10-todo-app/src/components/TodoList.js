@@ -2,11 +2,12 @@ import React from 'react';
 import TodoListItem from './TodoListItem';
 import './TodoList.scss';
 
-function TodoList() {
+function TodoList({ todos }) {
   return (
     <div>
-      <TodoListItem />
-      <TodoListItem />
+      {todos.map(todo => 
+        <TodoListItem key={todo.id} todo={todo} />
+      )}
     </div>
   );
 }
