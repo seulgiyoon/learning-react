@@ -41,10 +41,29 @@ function App() {
     [todos],
   );
 
+  const onRemove = useCallback(
+    id => {
+      setTodos(todos.filter(todo => todo.id !== id));
+    },
+    [todos],
+  );
+
+  const onToggle = useCallback(
+    id => {
+      setTodos(
+        // 삼항연산자로 한 건 처음. id일치하면 toggle, 아니면 그냥 그대로 리턴.
+        todos.map(todo =>
+          todo.id === id ? { ...todo, checked: !todo.checked } : todo,
+        ),
+      );
+    },
+    [todos],
+  );
+
   return (
     <TodoTemplate>
       <TodoInsert onInsert={onInsert} />
-      <TodoList todos={todos} />
+      <TodoList todos={todos} onRemove={onRemove} onToggle={onToggle} />
     </TodoTemplate>
   );
 }

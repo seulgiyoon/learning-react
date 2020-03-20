@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import { MdAdd } from 'react-icons/md';
 import './TodoInsert.scss';
 
@@ -14,17 +14,20 @@ function TodoInsert({ onInsert }) {
     setValue(e.target.value);
   }, []);
 
-  const onSubmit = useCallback(e => {
-    onInsert(value);
-    setValue('');
-    // form 엘리먼트 안 submit type button을 누르면 새로고침이 발생하는데
-    // 그를 막기 위해 사용하는 event.preventDefault()
-    e.preventDefault();
-    // 여기에 value를 넣지 않으면, 맨 처음 랜더되었을때의 value 값만을 함수가 기억함
-    // 즉 뭘 입력해서 추가해도 공백만 기억하니 공백만 삽입된다.
-    // onInsert도 책에서는 들어가있는데, 없어도 동작 자체는 문제가 없다.
-    // onInsert가 참조하는 todos를 여기서 직접적으로 참조하지 않아서 문제가 없는것같은데..
-  }, [onInsert, value]);
+  const onSubmit = useCallback(
+    e => {
+      onInsert(value);
+      setValue('');
+      // form 엘리먼트 안 submit type button을 누르면 새로고침이 발생하는데
+      // 그를 막기 위해 사용하는 event.preventDefault()
+      e.preventDefault();
+      // 여기에 value를 넣지 않으면, 맨 처음 랜더되었을때의 value 값만을 함수가 기억함
+      // 즉 뭘 입력해서 추가해도 공백만 기억하니 공백만 삽입된다.
+      // onInsert도 책에서는 들어가있는데, 없어도 동작 자체는 문제가 없다.
+      // onInsert가 참조하는 todos를 여기서 직접적으로 참조하지 않아서 문제가 없는것같은데..
+    },
+    [onInsert, value],
+  );
 
   return (
     // button onClick 이벤트 혹은 form의 onSubmit 이벤트를 이용
