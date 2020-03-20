@@ -427,3 +427,20 @@ const onInsert = useCallback(
 );
 ```
 - [[번역] 심층 분석: React Hook은 실제로 어떻게 동작할까?](https://hewonjeong.github.io/deep-dive-how-do-react-hooks-really-work-ko/)
+
+<br>
+
+#### 200320 Day 28 - 281~287p
+```js
+const onToggle = useCallback(
+  id => {
+    setTodos(
+      // 요소 내용 변경 시 삼항연산자로 한 건 처음. id일치하면 toggle, 아니면 그냥 그대로 리턴.
+      todos.map(todo =>
+        todo.id === id ? { ...todo, checked: !todo.checked } : todo,
+      ),
+    );
+  },
+  [todos],
+);
+```
