@@ -444,3 +444,36 @@ const onToggle = useCallback(
   [todos],
 );
 ```
+
+<br>
+
+#### 200322 Day 29 - 290~299p
+무거운 랜더링을 체험하기 위해 객체 2500개를 랜더. 이 과정에서 2500개의 객체를 생산하는 함수를 생성해 사용하는데, 객체를 담은 배열을 useState에 설정할 때 `functionName()` 이 아닌 `functionName`을 넣는다. 함수 실행을 넣을 경우, 리랜더링 될 때마다 다시 함수가 호출되지만 함수명을 넣으면 최초 랜더시에만 호출된다. (291p)
+```js
+// createBulkTodos()를 넣으면 랜더링시마다 함수가 호출된다.
+const [todos, setTodos] = useState(createBulkTodos);
+```
+크롬 개발자도구의 'Performance' 탭으로 성능을 분석하기. 녹화 버튼을 누르고 어떤 동작을 실행한 뒤 정지하면 성능 분석 결과가 나타난다. Timings 탭을 열면 각 시간대에 컴포넌트의 어떤 작업이 처리되었는지 확인할 수 있다. (294p)<br>
+컴포넌트의 props가 바귀지 않았다면 리렌더링하지 않도록 설정해서 함수형 컴포넌트의 성능을 최적화할 수 있다. React.memo사용. 만든 함수를 감싸면 된다. (295p)
+```js
+export default React.memo(TodoListItem);
+```
+더불어 함수들이 어떤 요소가 업데이트 될 때 따라서 다시 만들어지지 않도록, 함수형으로 useState를 업데이트한다. (298p)<br>
+App.js의 함수들을 함수형 업데이트로 바꿔주자 할 일을 체크하는 동작 소요시간이 1.9s에서 0.2s로 줄어들었다.
+```js
+const onInsert = useCallback(
+  text => {
+    const newTodo = {
+      id: nextId.current,
+      text: text,
+      checked: false,
+    };
+    // useState의 함수형 업데이트. 바로 새 값을 넣지 않고, 어떻게 업데이트할지를 정해준다.
+    // 이렇게 하면 52번줄에 todos를 넣지 않아도 되고, 따라서 todos가 바뀔 때마다 함수가 바뀌는 일이 사라진다.
+    setTodos(todos => todos.concat(newTodo));
+    nextId.current = nextId.current + 1;
+  },
+  // 원래 todos가 있었음. todos가 바뀔 때마다 onInsert함수가 바뀌었다.
+  [],
+);
+```
