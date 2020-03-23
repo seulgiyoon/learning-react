@@ -448,13 +448,13 @@ const onToggle = useCallback(
 <br>
 
 #### 200322 Day 29 - 290~299p
-무거운 랜더링을 체험하기 위해 객체 2500개를 랜더. 이 과정에서 2500개의 객체를 생산하는 함수를 생성해 사용하는데, 객체를 담은 배열을 useState에 설정할 때 `functionName()` 이 아닌 `functionName`을 넣는다. 함수 실행을 넣을 경우, 리랜더링 될 때마다 다시 함수가 호출되지만 함수명을 넣으면 최초 랜더시에만 호출된다. (291p)
+무거운 렌더링을 체험하기 위해 객체 2500개를 렌더. 이 과정에서 2500개의 객체를 생산하는 함수를 생성해 사용하는데, 객체를 담은 배열을 useState에 설정할 때 `functionName()` 이 아닌 `functionName`을 넣는다. 함수 실행을 넣을 경우, 리렌더링 될 때마다 다시 함수가 호출되지만 함수명을 넣으면 최초 렌더시에만 호출된다. (291p)
 ```js
-// createBulkTodos()를 넣으면 랜더링시마다 함수가 호출된다.
+// createBulkTodos()를 넣으면 렌더링시마다 함수가 호출된다.
 const [todos, setTodos] = useState(createBulkTodos);
 ```
 크롬 개발자도구의 'Performance' 탭으로 성능을 분석하기. 녹화 버튼을 누르고 어떤 동작을 실행한 뒤 정지하면 성능 분석 결과가 나타난다. Timings 탭을 열면 각 시간대에 컴포넌트의 어떤 작업이 처리되었는지 확인할 수 있다. (294p)<br>
-컴포넌트의 props가 바귀지 않았다면 리렌더링하지 않도록 설정해서 함수형 컴포넌트의 성능을 최적화할 수 있다. React.memo사용. 만든 함수를 감싸면 된다. (295p)
+컴포넌트의 props가 바뀌지 않았다면 리렌더링하지 않도록 설정해서 함수형 컴포넌트의 성능을 최적화할 수 있다. React.memo사용. 만든 함수를 감싸면 된다. (295p)
 ```js
 export default React.memo(TodoListItem);
 ```
@@ -477,3 +477,58 @@ const onInsert = useCallback(
   [],
 );
 ```
+
+<br>
+
+#### 200323 Day 30 - 300~305p
+상태를 업데이트하는 로직이 많다면 useReducer를 사용하면 좋겠다. 컴포넌트 바깥에 로직들을 둘 수 있음. (302p)<br>
+불변성을 지키지 않으면 객체 내부 값이 새로워저도 바뀐 것을 감지하지 못하므로 React.memo 등에서 전과 후를 비교하여 리렌더 여부를 결정하지 못한다. (303p)<br>
+리스트 관련 컴포넌트 작성 시 리스트 아이템과 리스트 자체를 최적화하기. 그러나 데이터가 많지 않거나 업데이트가 별로 없다면 안해도 된다. 어떤 경우에 어떤 컴포넌트가 리렌더되는지, 최적화를 할 상황인지 판단할 수 있어야함. (305p)
+```js
+// useReducer의 두번째 인자로 초기값을 넣어주는데, 그를 undefined로 주고 함수를 세번째 인자로 넣으면 첫 렌더시에만 함수가 호출된다
+const [todos, dispatch] = useReducer(todoReducer, undefined, createBulkTodos);
+```
+React.memo의 비교 방식을 수정하고 싶다면 React.memo() 두 번째 매개변수로 비교함수를 만들어 넘겨주면 된다.
+```js
+export default React.memo(
+  TodoListItem,
+  (prevProps, nextProps) => prevProps.todo === nextProps.todo,
+);
+```
+스크롤을 해야지만 보이는 컴포넌트들도 리렌더시 항상 같이 렌더된다. 이를 렌더하지 않고 크기만 차지하게끔 하는 라이브러리 react-virtualized (305p)<br>
+리스트에 반복적으로, 같은 크기로 생성되는 엘리먼트 크기를 측정한다(테두리를 포함해야하므로 두번째 엘리먼트의 크기를 기준으로 잡는다). (306p)
+```jsx
+function TodoList({ todos, onRemove, onToggle }) {
+  // List 컴포넌트에서 각 TodoListItem을 랜더할 때 사용할 함수
+  const rowRenderer = useCallback(
+    ({ index, key, style }) => {
+      const todo = todos[index];
+      return (
+        <TodoListItem
+          key={key}
+          todo={todo}
+          onRemove={onRemove}
+          onToggle={onToggle}
+          style={style}
+        />
+      );
+    },
+    [todos, onRemove, onToggle],
+  );
+
+  return (
+    <List
+      className="TodoList"
+      width={512} // 리스트 전체 가로 크기
+      height={513} // 리스트 전체 높이
+      rowCount={todos.length} // 전체 항목 개수
+      rowHeight={57} // 아이템 개별 항목의 높이
+      rowRenderer={rowRenderer} // 아이템 개별 항목을 랜더할 때 사용하는 함수
+      list={todos} // 랜더할 배열
+      style={{ outline: 'none'}} // List에 기본 적용되는 outline 스타일 제거
+    />
+  );
+}
+```
+- [react-virtualized](https://www.npmjs.com/package/react-virtualized)
+- [React.memo() 현명하게 사용하기](https://ui.toast.com/weekly-pick/ko_20190731/)
