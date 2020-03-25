@@ -22,12 +22,17 @@ const onChange = useCallback((e) => {
 }, [form]);
 
 // immer와 useState 함수형 업데이트 적용
-  const onChange = useCallback(e => {
-    const { name, value } = e.target;
-    setForm(
-      produce(draft => {
-        draft[name] = value;
-      })
-    );
-  }, []);
+const onChange = useCallback(e => {
+  const { name, value } = e.target;
+  setForm(
+    produce(draft => {
+      draft[name] = value;
+    })
+  );
+}, []);
 ```
+
+<br>
+
+#### 200325 Day 32 - 354~362p
+callback, Promise, async/await, axios 사용하기 실습
