@@ -36,3 +36,9 @@ const onChange = useCallback(e => {
 
 #### 200325 Day 32 - 354~362p
 callback, Promise, async/await, axios 사용하기 실습
+
+<br>
+
+#### 200326 Day 33 - 363~370p
+뉴스 정보를 불러올 수 있는 newsapi의 API키를 dotenv라이브러리를 이용해 환경변수로 설정해보았다. 리액트에서 사용할 땐 변수명 앞에 `REACT_APP_`을 붙여야 한다. 빌드 시 변수명이 그대로 실제 값으로 변환되어 누구나 볼 수 있게 공개되니 주의해야한다. <br>
+- [[Adding Custom Environment Variables | Create React App]](https://create-react-app.dev/docs/adding-custom-environment-variables/)
