@@ -50,3 +50,43 @@ useEffect에 직접적으로 등록하는 함수에 async를 붙이면 안된다
 `등록된 함수`는 렌더링 직후마다 실행되는 함수 - componentDidMount와 비슷, (두번째 파라미터 배열에 무엇을 넣는지에 따라 실행 조건은 달라짐 - componentDidUpdate와 비슷), `리턴하는 함수`는 컴포넌트가 언마운트 되기 전이나 업데이트 되기 직전에 수행되는 작업이다 - componentWillUnmount와 비슷.(197p)<br>
 styled-components는 빌드되면 class명이 랜덤으로 생성된다. 이로 인해 이름 겹침이나 오타로 인한 오류를 방지한다고. 그렇지만 지금은 css에 대해서 잘 알지 않으면 디버깅이 편하지 않다고 느낌.
 - [[ Using the Effect Hook | React ]](https://ko.reactjs.org/docs/hooks-effect.html)
+
+<br>
+
+#### 200329 Day 35 - 378~385p
+```js
+// active가 true일 경우 적용되는 스타일 설정
+${props =>
+  props.active && css`
+    font-weight: 600;
+    border-bottom: 2px solid coral;
+    color: coral;
+`}
+```
+```jsx
+<Category
+  key={c.name}
+  // 일치하면 true
+  active={category === c.name}
+  onClick={() => onSelect(c.name)}
+>
+  {c.text}
+</Category>
+```
+리액트 라우터, NavLink 사용 시
+```js
+// 일반 HTML 요소가 아닌 특정 컴포넌트에 스타일 지정 시 styled(컴포넌트명) 사용
+const Category = styled(NavLink)`
+`;
+```
+```jsx
+<Category
+  key={c.name}
+  // NavLink에서 링크가 활성화되었을 때 적용할 CSS 클래스값 부여 activeClassName
+  activeClassName="active"
+  exact={c.name === 'all'}
+  to={c.name === 'all' ? '/' : `/${c.name}`}
+>
+  {c.text}
+</Category>
+```
