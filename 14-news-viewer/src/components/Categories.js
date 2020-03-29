@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 const categories = [
   {
@@ -43,7 +44,7 @@ const CategoriesBlock = styled.div`
   }
 `;
 
-const Category = styled.div`
+const Category = styled(NavLink)`
   font-size: 1.125rem;
   cursor: pointer;
   /* 이 짧은 단어 안에서 왜 연속공백유지를 설정했나? 없어도 차이가 없음 */
@@ -56,15 +57,14 @@ const Category = styled.div`
     color: #495057;
   }
 
-  ${props =>
-    props.active && css`
-      font-weight: 600;
-      border-bottom: 2px solid coral;
-      color: coral;
-      &:hover {
-        color: gray;
-      }
-  `}
+  &.active {
+    font-weight: 600;
+    border-bottom: 2px solid coral;
+    color: coral;
+    &:hover {
+      color: gray;
+    }
+  }
 
   /* 자기자신 + 자기자신 선택 */
   & + & {
@@ -72,15 +72,16 @@ const Category = styled.div`
   }
 `;
 
-function Categories({ category, onSelect }) {
+function Categories() {
   return (
     <CategoriesBlock>
       {categories.map(c => (
         <Category
           key={c.name}
-          // 일치하면 true
-          active={category === c.name}
-          onClick={() => onSelect(c.name)}
+          // NavLink에서 링크가 활성화되었을 때 적용할 CSS 클래스값 부여 activeClassName
+          activeClassName="active"
+          exact={c.name === 'all'}
+          to={c.name === 'all' ? '/' : `/${c.name}`}
         >
           {c.text}
         </Category>
