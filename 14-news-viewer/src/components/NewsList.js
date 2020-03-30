@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import NewsItem from './NewsItem';
+import usePromise from '../lib/usePromise';
 import axios from 'axios';
 
 const NewsListBlock = styled.div`
@@ -17,36 +18,27 @@ const NewsListBlock = styled.div`
 `;
 
 function NewsList({ category }) {
-  const [articles, setArticles] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const query = category === 'all' ? '' : `&category=${category}`;
-        const response = await axios.get(
-          `http://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=${process.env.REACT_APP_NEWS_KEY}`,
-        );
-        setArticles(response.data.articles);
-      } catch (error) {
-        console.error(error);
-      }
-      // try 안쪽 맨 아래가 아니라 이곳에 로딩 끝 지점 설정
-      setLoading(false);
-    };
-    // async 함수를 따로 정의해 사용했기 때문에 여기에서 실행해준다
-    fetchData();
+  // 비구조화 할당. 반환받은 배열의 첫번째 요소가 loading이라는 이름으로, 나머지도 같은 논리로 각 변수에 할당된다.
+  const [loading, response, error] = usePromise(() => {
+    const query = category === 'all' ? '' : `&category=${category}`;
+    return axios.get(
+      `http://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=${process.env.REACT_APP_NEWS_KEY}`,
+    );
   }, [category]);
 
   if (loading) {
     return <NewsListBlock>대기 중...</NewsListBlock>;
   }
 
-  if (!articles) {
+  if (!response) {
     return null;
   }
 
+  if (error) {
+    return <NewsListBlock>에러가 발생했습니다.</NewsListBlock>;
+  }
+
+  const { articles } = response.data;
   return (
     <NewsListBlock>
       {articles.map(article => (
