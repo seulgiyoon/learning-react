@@ -90,3 +90,52 @@ const Category = styled(NavLink)`
   {c.text}
 </Category>
 ```
+
+<br>
+
+#### 200330 Day 36 - 386~390p
+프로젝트의 다양한 곳에서 사용될 수 있는 유틸 함수는 보통 src 디렉터리에 lib 디렉터리 안에 작성한다. (387p)<br>
+커스텀 훅은 훅과 같은 원리를 가진 오리지널 함수 자체를 만들어 사용한단 의미는 아니고 기존의 훅을 사용해서 원하는 특정한 기능을 구현하는 일. 비슷한 로직을 사용하는 컴포넌트들이 함께 공유할 수 있는, 훅을 사용한 모듈을 따로 빼서 만든다. 커스텀 훅을 만들 경우 함수명을 'use'로 시작하도록 약속한다.<br>
+커스텀 훅이 그 훅을 사용하는 컴포넌트 바깥에서 자신만의 state를 가지고 있는데, 그 state의 변화에 따라서 커스텀 훅을 사용하는 함수가 다시 랜더되는 점이 정확하게 이해가 되지 않는다. 더 알아보기
+```js
+// 커스텀 훅 usePromise
+export default function usePromise(promiseCreator, deps) {
+  // deps => dependencies
+  // 어떤 요소가 바뀌면 함수가 바뀌어야하는 요소, 의존배열을 의미함.
+  const [loading, setLoading] = useState(false);
+  const [resolved, setResolved] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const process = async () => {
+      setLoading(true);
+      try {
+        const resolved = await promiseCreator();
+        setResolved(resolved);
+      } catch (error) {
+        setError(error);
+      }
+      setLoading(false);
+    };
+    process();
+    // deps를 배열 상태로 받아오므로 그대로 넣어준다
+  }, deps);
+
+  // state 변화가 있을 때마다 함수 호출, 리턴이 일어난다?
+  console.log(loading, resolved, error);
+  // 여러 값을 리턴할 때 배열이나 객체에 담아 보내고, 받는 쪽에서 비구조화 할당 활용하기.
+  return [loading, resolved, error];
+}
+```
+```js
+  // usePromise 사용
+  // 비구조화 할당. 반환받은 배열의 첫번째 요소가 loading이라는 이름으로, 나머지도 같은 논리로 각 변수에 할당된다.
+  const [loading, response, error] = usePromise(() => {
+    const query = category === 'all' ? '' : `&category=${category}`;
+    return axios.get(
+      `http://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=${process.env.REACT_APP_NEWS_KEY}`,
+    );
+  }, [category]);
+```
+- [[ Building Your Own Hooks | React ]](https://ko.reactjs.org/docs/hooks-custom.html)
+- [[ 번역: useEffect 완벽 가이드 ]](https://rinae.dev/posts/a-complete-guide-to-useeffect-ko)
