@@ -139,3 +139,40 @@ export default function usePromise(promiseCreator, deps) {
 ```
 - [[ Building Your Own Hooks | React ]](https://ko.reactjs.org/docs/hooks-custom.html)
 - [[ 번역: useEffect 완벽 가이드 ]](https://rinae.dev/posts/a-complete-guide-to-useeffect-ko)
+
+<br>
+
+#### 200331 Day 37 - 392~398p
+전역적으로 사용할 데이터가 있을 때(로그인 정보, 애플리케이션 환경 설정, 테마 등) 유용한 Context API
+```js
+// 새로운 Context 만들기
+import { createContext } from 'react';
+// 지정한 값에는 ColorContext 안의 Consumer 컴포넌트 안 객체로 함수를 통해 접근
+// <ColorContext.Consumer>
+//   {value => <p>{value.width}</p>}
+// </ColorContext.Consumer>
+const ColorContext = createContext({
+  width: '70px', 
+  height: '100px', 
+  color: 'black' 
+});
+```
+createContext에 부여한 기본값은 Provider를 사용하지 않았을 때만 사용되는 기본값이다. Provider를 사용하면 그 값이 무시되기에, Provider를 사용하면서 거기에 value값을 부여하지 않으면 읽을 value가 없으므로 오류가 발생한다. (398p)
+```js
+import ColorContext from './contexts/color';
+
+function App() {
+  return (
+    // Provider 사용 시 항상 value를 부여한다.
+    <ColorContext.Provider value={{
+      width: '100px', 
+      height: '200px', 
+      color: 'coral' 
+    }}>
+      <ColorBox />
+    </ColorContext.Provider>
+  );
+}
+```
+- [[ Context.Consumer | React ]](https://ko.reactjs.org/docs/context.html#contextconsumer)
+- [[ Render Props | React ]](https://ko.reactjs.org/docs/render-props.html)
