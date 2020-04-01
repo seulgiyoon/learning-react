@@ -176,3 +176,68 @@ function App() {
 ```
 - [[ Context.Consumer | React ]](https://ko.reactjs.org/docs/context.html#contextconsumer)
 - [[ Render Props | React ]](https://ko.reactjs.org/docs/render-props.html)
+
+<br>
+
+#### 200401 Day 38 - 399~405p
+Provider를 Consumer가 구독하는 구조. Context를 만들고(createContext), 거기에 데이터를 집어넣고(Provider), 필요한 곳에서 꺼내 쓰기(Consumer) <br>
+Consumer를 통해서 Provider에 접근할 수 있다. <br>
+마우스 오른쪽 클릭 이벤트 설정 `onContextMenu`
+```js
+// Provider 지정
+const ColorProvider = ({ children }) => {
+  const [color, setColor] = useState('black');
+  const [subcolor, setSubcolor] = useState('red');
+
+  const value = {
+    state: { color, subcolor },
+    actions: { setColor, setSubcolor }
+  };
+
+  return (
+    <ColorContext.Provider value={value}>{children}</ColorContext.Provider>
+  );
+}
+```
+```jsx
+function ColorBox() {
+  return (
+    // Consumer를 통해서 Provider에 접근할 수 있다 - state 접근
+    <ColorConsumer>
+      {({ state }) => (
+        <div 
+          style={{ 
+            width: '50px', 
+            height: '50px', 
+            background: state.color 
+          }} 
+        />
+      )}
+    </ColorConsumer>
+  );
+};
+```
+```jsx
+function SelectColors() {
+  return (
+    {/* Consumer를 통해서 Provider에 접근할 수 있다 - state, action 접근 */}
+    <ColorConsumer>
+      <div>
+        {({ state, actions }) => (
+            <div 
+              style={{
+                width: '20px', 
+                height: '20px', 
+                background: 'red', 
+              }} 
+              onClick={() => actions.setColor('red')}
+            />
+          ))}
+        )}
+      </div>
+    </ColorConsumer>
+  )
+}
+```
+- [[ Context | React ]](https://ko.reactjs.org/docs/context.html)
+- [[ 상태 관리 도구로서의 React Context | chatoo의 웹개발 블로그 ]](https://chatoo2412.github.io/javascript/react/react-context-as-a-state-management-tool/)
