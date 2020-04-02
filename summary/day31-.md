@@ -241,3 +241,30 @@ function SelectColors() {
 ```
 - [[ Context | React ]](https://ko.reactjs.org/docs/context.html)
 - [[ 상태 관리 도구로서의 React Context | chatoo의 웹개발 블로그 ]](https://chatoo2412.github.io/javascript/react/react-context-as-a-state-management-tool/)
+
+<br>
+
+#### 200402 Day 39 - 406~417p
+Consumer 대신 Hook이나 static contextType을 사용할 수 있다. (406p)
+```js
+// (함수형 컴포넌트에서) useContext로 바로 컨텍스트의 값을 조회한다.
+const { state } = useContext(ColorContext);
+```
+```jsx
+class SelectColors extends Component {
+
+  // (클래스형 컴포넌트에서) 컨텍스트 설정
+  // 하나의 컨텍스트만 구독할 수 있다.
+  static contextType = ColorContext;
+
+  // this.context로 값에 접근 
+  render() {
+    return (
+      (...)
+      onClick={() => this.context.actions.setColor(color)}
+      (...)
+    )
+  }
+}
+```
+- [[ Class.contextType | React ]](https://ko.reactjs.org/docs/context.html#classcontexttype)
