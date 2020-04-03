@@ -268,3 +268,12 @@ class SelectColors extends Component {
 }
 ```
 - [[ Class.contextType | React ]](https://ko.reactjs.org/docs/context.html#classcontexttype)
+
+<br>
+
+#### 200403 Day 40 - 418~428p
+redux 맛보기. 액션 타입과 액션 생성 함수 작성 -> 리듀서 작성 -> 스토어 만들기.<br>
+리덕스는 리액트처럼 데이터 변경을 감지할 때 성능을 높이기 위해 얕은 비교를 사용하므로, 데이터의 불변성을 지켜야한다. 요소의 값 자체가 아닌 참조하는 곳이 같은지만을 보는 것. 그래서 객체가 가진 요소가 완전히 같아도 참조점이 다른 메모리 공간을 점유하고 있으면 둘은 같지 않다. 그러나 불변성을 지키지 않고(새로운 메모리 공간을 차지하도록 복사 하지 않고) 기존 객체에 접근해서 값을 변경하면 그 둘은 결국 같은 곳을 바라보고 있으므로 예전 값과 새로운 값이 같다고 판정한다.<br>
+그 외에 단일 스토어 가지기 / 순수함수로만 리듀서를 구성하기(그렇지 않은 동작들은 미들웨어를 통하거나 리듀서 함수 바깥에서 처리하기)라는 규칙이 있다.
+- [[ How does shallow compare work in react | Stack Overflow ]](https://stackoverflow.com/questions/36084515/how-does-shallow-compare-work-in-react)
+- [[ Parcel ]](https://ko.parceljs.org/)
