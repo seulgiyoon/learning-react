@@ -277,3 +277,40 @@ redux 맛보기. 액션 타입과 액션 생성 함수 작성 -> 리듀서 작�
 그 외에 단일 스토어 가지기 / 순수함수로만 리듀서를 구성하기(그렇지 않은 동작들은 미들웨어를 통하거나 리듀서 함수 바깥에서 처리하기)라는 규칙이 있다.
 - [[ How does shallow compare work in react | Stack Overflow ]](https://stackoverflow.com/questions/36084515/how-does-shallow-compare-work-in-react)
 - [[ Parcel ]](https://ko.parceljs.org/)
+
+<br>
+
+#### 200404 Day 41 - 430~438p
+리액트 프로젝트에서 리덕스를 사용할 때 많이 사용하는 패턴은 프레젠테이셔널 컴포넌트와 컨테이너 컴포넌트를 분리하는것이다. 프레젠테이셔널 컴포넌트는 대부분의 경우 상태 관리가 이루어지지않고, 부모 컴포넌트로부터 받은 데이터를 이용해 화면에 UI를 보여주는 역할만을 담당하는 컴포넌트이다. 컨테이너 컴포넌트는 리덕스와 연동되어 상태를 받아오거나 스토어에 액션을 디스패치하는 컴포넌트이다. 이러한 구조는 코드의 재사용성을 높이고 관심사를 분리해 UI를 작성하기 수월하다. 관례로 프레젠테이셔널 컴포넌트는 components 폴더에, 컨테이너 컴포넌트는 containers 폴더 안에 작성한다. (431p)<br>
+리덕스 관련 코드를 작성할 때는 actions, constants, reducers 폴더를 만들어 그 안에 기능별로 파일을 분류하여 넣을 수도 있고, modules 폴더 안에 관련있는 컴포넌트에 대한 액션타입, 액션 생성 함수, 리듀서 함수를 모두 몰아 작성할 수도 있다. (436p)<br>
+```js
+// 액션 타입 정의. 문자열의 내용은 이름 충돌을 방지하기 위해서 '모듈 이름/액션 이름' 형태로 작성한다.
+const INCREASE = 'counter/INCRESE';
+const DECREASE = 'counter/DECREASE';
+```
+```js
+// export 키워드로 다른 파일에서 불러올 수 있도록 액션 생성 함수를 작성
+export const increase = () => ({ type: INCREASE });
+export const decrease = () => ({ type: DECREASE });
+
+// 리듀서 함수
+const counter = (state = initialState, action) => {
+  switch(action.type) {
+    case 'INCREASE':
+      return {
+        number: state.number + 1
+      }
+    case 'DECREASE':
+      return {
+        number: state.number - 1
+      }
+    default:
+      return state
+  }
+}
+
+export default counter;
+
+// 현재 파일에서 내보낸 함수들을 다른 파일에서 import한다면 
+// import counter, { increase, decrease } from './counter'가 된다.
+```
