@@ -296,11 +296,11 @@ export const decrease = () => ({ type: DECREASE });
 // 리듀서 함수
 const counter = (state = initialState, action) => {
   switch(action.type) {
-    case 'INCREASE':
+    case INCREASE:
       return {
         number: state.number + 1
       }
-    case 'DECREASE':
+    case DECREASE:
       return {
         number: state.number - 1
       }
@@ -313,4 +313,36 @@ export default counter;
 
 // 현재 파일에서 내보낸 함수들을 다른 파일에서 import한다면 
 // import counter, { increase, decrease } from './counter'가 된다.
+```
+
+<br>
+
+#### 200405 Day 42 - 439~446p
+스토어에는 리듀서를 하나만 사용해야 함. combineReducers 메서드를 이용해서 만든 리듀서들을 하나로 합쳐준다. (442p)
+```js
+import { combineReducers } from 'redux';
+import counter from './counter';
+import todos from './todos';
+
+const rootReducer = combineReducers({
+  counter,
+  todos,
+});
+
+export default rootReducer;
+```
+```jsx
+// index.js
+// 만든 리듀서로 redux 스토어 생성
+const store = createStore(rootReducer);
+
+ReactDOM.render(
+  <React.StrictMode>
+    {/* react-redux의 Provider컴포넌트로 App 컴포넌트를 감싸고, props로 store를 내린다 */}
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
 ```
