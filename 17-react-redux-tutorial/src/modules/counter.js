@@ -14,11 +14,11 @@ const initialState = {
 // 리듀서 함수
 const counter = (state = initialState, action) => {
   switch(action.type) {
-    case 'INCREASE':
+    case INCREASE:
       return {
         number: state.number + 1
       }
-    case 'DECREASE':
+    case DECREASE:
       return {
         number: state.number - 1
       }
