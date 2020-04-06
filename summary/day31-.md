@@ -346,3 +346,64 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+
+<br>
+
+#### 200406 Day 43 - 447~456p
+컴포넌트와 리덕스 스토어 연동하기 (447p)
+```js
+// react-redux의 connect 메서드 사용
+// 함수를 반환하는 makeContainer
+const makeContainer = connect(
+  mapStateToProps, // 리덕스 스토어 안의 상태를 컴포넌트의 props로 넘겨주기 위해 설정하는 함수, 
+  mapDispatchToProps // 액션 생성 함수를 컴포넌트의 props로 넘겨주기 위해 사용하는 함수
+)
+
+// 반환된 함수에 타겟 컴포넌트를 파라미터로 넣어 리덕스와 연동된 컴포넌트를 만든다
+makeContainer(/* target component */)
+```
+```js
+// 위 코드를 익명함수 상태로 선언
+export default connect(
+  (state) => ({
+    number: state.counter.number,
+  }),
+  (dispatch) => ({
+    increase: () => dispatch(increase()),
+    decrease: () => dispatch(decrease()),
+  })
+)(CounterContainer);
+```
+```js
+// redux의 bindActionCreators 사용
+export default connect(
+  (state) => ({
+    number: state.counter.number,
+  }),
+  (dispatch) => 
+    bindActionCreators(
+      {
+        increase,
+        decrease
+      },
+      dispatch
+    )
+)(CounterContainer);
+```
+```js
+// connect의 두 번째 파라미터를 액션 생성 함수로 이루어진 객체로 전달
+// connect 함수가 내부적으로 bindActionCreators 작업을 한다
+export default connect(
+  (state) => ({
+    number: state.counter.number,
+  }),
+  {
+    increase,
+    decrease
+  },
+)(CounterContainer);
+```
+- [[ connect.js explained | Dan Abramov ]](https://gist.github.com/gaearon/1d19088790e70ac32ea636c025ba424e)
+- [[ Defining mapDispatchToProps As An Object | React Redux ]](https://react-redux.js.org/using-react-redux/connect-mapdispatch#defining-mapdispatchtoprops-as-an-object)
+- [[ React Redux - connect & provider | 생활코딩 ]](https://youtu.be/h5Trjjra50E)
+- [[ (번역)React + Redux 플로우의 이해 | carrot useless ]](https://medium.com/@ca3rot/%EC%95%84%EB%A7%88-%EC%9D%B4%EA%B2%8C-%EC%A0%9C%EC%9D%BC-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-%EC%89%AC%EC%9A%B8%EA%B1%B8%EC%9A%94-react-redux-%ED%94%8C%EB%A1%9C%EC%9A%B0%EC%9D%98-%EC%9D%B4%ED%95%B4-1585e911a0a6)
