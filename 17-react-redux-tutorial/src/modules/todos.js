@@ -5,7 +5,7 @@ const TOGGLE = 'todos/TOGGLE'; // todo의 완료/미완료 상태 변경
 const REMOVE = 'todos/REMOVE'; // todo 삭제
 
 // 액션 생성 함수 -> 들어온 데이터를 가능하면 알맞은 형태로 처리
-export const changeinput = (input) => ({ type: CHANGE_INPUT, input });
+export const changeInput = (input) => ({ type: CHANGE_INPUT, input });
 let id = 3;
 export const insert = (text) => ({
   type: INSERT,
