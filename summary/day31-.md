@@ -407,3 +407,45 @@ export default connect(
 - [[ Defining mapDispatchToProps As An Object | React Redux ]](https://react-redux.js.org/using-react-redux/connect-mapdispatch#defining-mapdispatchtoprops-as-an-object)
 - [[ React Redux - connect & provider | 생활코딩 ]](https://youtu.be/h5Trjjra50E)
 - [[ (번역)React + Redux 플로우의 이해 | carrot useless ]](https://medium.com/@ca3rot/%EC%95%84%EB%A7%88-%EC%9D%B4%EA%B2%8C-%EC%A0%9C%EC%9D%BC-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-%EC%89%AC%EC%9A%B8%EA%B1%B8%EC%9A%94-react-redux-%ED%94%8C%EB%A1%9C%EC%9A%B0%EC%9D%98-%EC%9D%B4%ED%95%B4-1585e911a0a6)
+
+<br>
+
+#### 200407 Day 44 - 457~463p
+액션 생성 함수와 리듀서를 더 간결하게 작성할 수 있는 라이브러리 redux-actions
+```js
+import { createAction, handleActions } from 'redux-actions';
+
+// 액션생성
+export const increase = createAction(INCREASE);
+export const decrease = createAction(DECREASE);
+
+// 리듀서
+const counter = handleActions(
+  {
+    [INCREASE]: (state, action) => ({ number: state.number + 1 }),
+    [DECREASE]: (state, action) => ({ number: state.number - 1 }),
+  },
+  initialState,
+);
+```
+액션 함수에서 파라미터를 필요로 하는 경우, 그 파라미터는 `payload`라는 이름으로 넘어간다. 그래서 리듀서에서 `action.payload`로 접근할 수 있다. (459p)
+```js
+export const changeInput = createAction(CHANGE_INPUT, (input) => input);
+
+const todos = handleActions(
+  {
+    [CHANGE_INPUT]: (state, action) => ({
+      ...state,
+      // action.payload로 접근
+      input: action.payload,
+    }),
+  (...)
+```
+모든 파라미터를 payload로 가져오므로 헷갈릴 수 있다. 비구조화할당을 이용해서 action객체의 payload를 의미있는 파라미터명으로 가지고 온다.
+```js
+const todos = handleActions(
+  {
+    [CHANGE_INPUT]: (state, { payload: input }) => ({ ...state, input }),
+  (...)
+```
+- [[ redux-actions | redux-actions ]](https://redux-actions.js.org/)
