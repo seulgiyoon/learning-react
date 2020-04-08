@@ -30,14 +30,17 @@ const initialState = {
 // 리듀서
 const todos = handleActions(
   {
-    [CHANGE_INPUT]: (state, { payload: input }) => produce(draft => draft.input = input),
+    [CHANGE_INPUT]: (state, { payload: input }) => 
+      produce(state, draft => {
+        draft.input = input;
+      }),
     [INSERT]: (state, { payload: todo }) => ({
       ...state,
       todos: state.todos.concat(todo),
     }),
     [TOGGLE]: (state, { payload: id }) => 
-      produce(draft => {
-        const targetTodo = draft.find(todo => todo.id === id);
+      produce(state, draft => {
+        const targetTodo = draft.todos.find(todo => todo.id === id);
         targetTodo.done = !targetTodo.done
       }),
     [REMOVE]: (state, { payload: id }) => ({
