@@ -3,10 +3,16 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer from './modules';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+// import loggerMiddleware from './lib/loggingMiddleware';
+import { createLogger } from 'redux-logger';
+import ReduxThunk from 'redux-thunk';
 
-const store = createStore(rootReducer);
+const logger = createLogger();
+
+// 스토어를 생성할 때 미들웨어를 적용한다
+const store = createStore(rootReducer, applyMiddleware(logger, ReduxThunk));
 
 ReactDOM.render(
   <React.StrictMode>
