@@ -82,3 +82,10 @@ const sample = handleActions({
 - [[ dispatch(action) | Redux ]](https://redux.js.org/api/store#dispatchaction)
 - [[ Redux 분석하기 | TOAST Meetup ]](https://meetup.toast.com/posts/111)
 - [[ TDD Redux-Saga | irrationnelle ]](https://www.vobour.com/00-redux-saga-)
+
+<br>
+
+#### 200413 Day 49 - 491~496p
+데이터를 불러 와 화면에 렌더링할때는 유효성 검사가 중요하다. 데이터가 존재하는지 여부를 검사 후 렌더하는 것. 유저 목록이 존재하지 않는 데 map을 이용하여 유저 목록을 렌더하도록 접근할 경우, null값에 대해서 map 함수를 호출하게 되어 오류가 발생한다. (492p)<br>
+- 어떤 '목록'에 대해서는 HTML 리스트 태그를 사용하자. `<ul>, <ol>, <li>`
+- 컨테이너 컴포넌트 작성 시 connect 메서드 사용 부분을 먼저 작성하자(일단 교재에 적힌 설명만 슬쩍 보고 내가 먼저 코드를 적어 볼 땐 이 방법이 맞는 흐름임).
