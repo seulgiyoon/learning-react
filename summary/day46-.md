@@ -89,3 +89,55 @@ const sample = handleActions({
 데이터를 불러 와 화면에 렌더링할때는 유효성 검사가 중요하다. 데이터가 존재하는지 여부를 검사 후 렌더하는 것. 유저 목록이 존재하지 않는 데 map을 이용하여 유저 목록을 렌더하도록 접근할 경우, null값에 대해서 map 함수를 호출하게 되어 오류가 발생한다. (492p)<br>
 - 어떤 '목록'에 대해서는 HTML 리스트 태그를 사용하자. `<ul>, <ol>, <li>`
 - 컨테이너 컴포넌트 작성 시 connect 메서드 사용 부분을 먼저 작성하자(일단 교재에 적힌 설명만 슬쩍 보고 내가 먼저 코드를 적어 볼 땐 이 방법이 맞는 흐름임).
+
+<br>
+
+#### 200414 Day 50 - 497~503p
+기능별로 모듈을 나누어 사용하기. 로딩 상태를 관리하는 모듈 loading과 받아온 데이터를 관리하는 모듈 sample로 나눈다. 메인으로 API 리퀘스트를 처리하는 곳은 sample에서 사용하는 thunk함수를 이용한 액션이므로 그곳에서 loading의 액션들이 적절한 시점에 발동하도록 코드를 작성한다.
+```js
+// thunk를 이용한 액션 생성함수
+// loading의 액션을 가져옴
+import { startLoading, finishLoading } from '../modules/loading';
+
+export default function createRequestThunk(type, request) {
+  const SUCCESS = `${type}_SUCCESS`;
+  const FAILURE = `${type}_FAILURE`;
+
+  return params => async dispatch => {
+    dispatch({ type });
+    // 인자로 넘기는 액션의 로딩 상태를 true로 설정
+    dispatch(startLoading(type));
+    try {
+      const response = await request(params);
+      dispatch({ type: SUCCESS, payload: response.data });
+      // 데이터를 모두 받아오면 인자로 넘기는 액션의 로딩 상태를 false로 설정
+      dispatch(finishLoading(type));
+    }
+    catch(error) {
+      dispatch({ type: FAILURE, payload: error, error: true });
+      dispatch(finishLoading(type));
+      throw error;
+    }
+  };
+};
+```
+```js
+// 기능별로 나눈 여러 모듈에서 값을 가져오기.
+// 하나의 컴포넌트에서 여러 모듈로부터 state 조회해서 사용한다.
+// 여기서는 state.sample, state.loading에서 상태값을 가져와 사용
+export default connect(
+  ({ sample, loading }) => ({
+    loadingPost: loading['sample/GET_POST'],
+    loadingUsers: loading['sample/GET_USERS'],
+    post: sample.post,
+    users: sample.users
+  }),
+  {
+    getPost,
+    getUsers
+  }
+)(SampleContainer);
+```
+redux-saga에서 사용하는 ES6의 제네레이터 함수를 우선 이해하기.
+- [[ function* | MDN ]](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function*)
+- [[ 제너레이터와 async/awit | Poiema Web ]](https://poiemaweb.com/es6-generator)
