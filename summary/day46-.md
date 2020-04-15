@@ -141,3 +141,29 @@ export default connect(
 redux-saga에서 사용하는 ES6의 제네레이터 함수를 우선 이해하기.
 - [[ function* | MDN ]](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function*)
 - [[ 제너레이터와 async/awit | Poiema Web ]](https://poiemaweb.com/es6-generator)
+
+<br>
+
+#### 200415 Day 51 - 504~510p
+redux-saga을 카운터에 적용해서 기본적인 움직임을 살핌.
+```js
+function* generator() {
+  x = yield;
+  y = yield;
+  yield x + y;
+  return;
+}
+
+// 제네레이터 함수를 이용해서 제네레이터를 생성
+const sum = generator();
+
+sum.next()
+// {value: undefined, done: false}
+sum.next(100)
+// {value: undefined, done: false}
+sum.next(200)
+// {value: 300, done: false}
+sum.next()
+// {value: undefined, done: true}
+```
+- [[ Redux-Saga ]](https://redux-saga.js.org/)
