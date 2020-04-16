@@ -167,3 +167,40 @@ sum.next()
 // {value: undefined, done: true}
 ```
 - [[ Redux-Saga ]](https://redux-saga.js.org/)
+
+<br>
+
+#### 200416 Day 52 - 511~520p
+```js
+// saga를 만들어 반환하는 함수
+import { call, put } from 'redux-saga/effects';
+import { startLoading, finishLoading } from '../modules/loading';
+
+export default function createRequestSaga(type, request) {
+  const SUCCESS = `${type}_SUCCESS`;
+  const FAILURE = `${type}_FAILURE`;
+
+  return function* (action) {
+    // put으로 액션을 실행시킨다
+    yield put(startLoading(type));
+    try {
+      // call로 Promise를 반환하는 함수를 호출하고 기다린다.
+      // 첫번째 인자로 함수, 두번째 인자로 함수에 전달할 인수를 받는다.
+      const response = yield call(request, action.payload);
+      yield put({
+        type: SUCCESS,
+        payload: response.data
+      });
+    }
+    catch(error) {
+      yield put({
+        type: FAILURE,
+        payload: error,
+        error: true
+      });
+    }
+    yield put(finishLoading(type));
+  };
+}
+```
+- [[ Effect creators | Redux-Saga ]](https://redux-saga.js.org/docs/api/)
