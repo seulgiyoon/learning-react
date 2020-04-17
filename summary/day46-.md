@@ -204,3 +204,105 @@ export default function createRequestSaga(type, request) {
 }
 ```
 - [[ Effect creators | Redux-Saga ]](https://redux-saga.js.org/docs/api/)
+
+<br>
+
+#### 200417 Day 53 - 524~530p
+코드 스플리팅은 어떤 목적을 위해 코드가 담긴 파일을 분리하는 작업이다. 웹팩에서 설정 가능한 SplitChunks 기능은 라이브러리 관련 기능 - 자주 바뀌지 않는 코드들 - 과 그 외의 코드들을 분리하여 브라우저가 새로 파일을 받는 빈도를 줄일 수 있도록 한다. (513p) <br>
+SPA 프로젝트를 개발할 때, A 페이지에만 방문할 경우 B와 C페이지의 코드는 읽을 필요가 없다. 하지만 별도 설정이 없으면 A, B, C의 코드가 모두 한 파일에 저장되므로 항상 모든 코드를 다 불러오게 된다. 필요한 코드를 필요한 시점에 불러오도록 설정하는 방법이 코드 비동기 로딩이다. (524p) <br>
+import를 함수로 사용하면 Promise를 반환한다. 이를 dynamic import라고 하며, 아직 자바스크립트 표준 문법은 아니다. 이 함수를 통해서 모듈을 불러올 때 모듈에서 default로 내보낸 항목은 result.default를 이용해서 참조한다. 아래 코드를 빌드하면 notify.js에 해당하는 코드가 따로 개별 파일로 빌드된 것을 확인할 수 있다. (528p) <br>
+서버사이드 랜더링을 한다면 Loadable Components 라이브러리를, 아니라면 React.lazy와 Suspense를 사용한다.
+```jsx
+import React from 'react';
+
+function App() {
+  // import를 함수로 사용하여, onClick함수가 실행될 때만 notify.js 파일을 불러오도록 한다.
+  const onClick = () => {
+    import('./notify').then(result => result.default());
+  }
+
+  return (
+    <div>
+      <button onClick={onClick}>NOTIFY</button>
+    </div>
+  );
+}
+```
+```jsx
+class App extends Component {
+  state = {
+    SplitMe: null
+  };
+
+  // 클릭하면 모듈이 로딩되기를 기다려서 state에 모듈을 할당 
+  handleClick = async() => {
+    const loadedModule = await import('./SplitMe');
+    this.setState({
+      SplitMe: loadedModule.default
+    });
+  }
+
+  render() {
+    const { SplitMe } = this.state;
+    return (
+      <div>
+        <button onClick={this.handleClick}>Click</button>
+        {/* 모듈이 존재한다면 랜더 */}
+        {SplitMe && <SplitMe />}
+      </div>
+    )
+  }
+}
+```
+```jsx
+// React.laze와 Suspense 사용
+import React, { useState, Suspense } from 'react';
+
+function App() {
+  const [visible, setVisible] = useState(false);
+  const SplitMe = React.lazy(() => import('./SplitMe'));
+
+  return (
+    <div>
+      <button onClick={() => setVisible(true)}>Click</button>
+      <Suspense fallback={<div>로딩중...</div>}>
+        {visible && <SplitMe />}
+      </Suspense>
+    </div>
+  )
+}
+```
+```jsx
+// Loadable components 라이브러리 사용
+import React, { useState } from 'react'
+import loadable from '@loadable/component';
+
+const SplitMe = loadable(() => import('./SplitMe'), {
+  fallback: <div>로딩 중...</div>
+});
+
+function App() {
+  const [visible, setVisible] = useState(false);
+  const onClick = () => {
+    setVisible(true);
+  }
+  const onMouseOver = () => {
+    // 버튼에 마우스를 올린 시점부터 컴포넌트를 미리 불러온다
+    SplitMe.preload();
+  }
+  
+  return (
+    <div>
+      <button 
+        onClick={onClick}
+        onMouseOver={onMouseOver}
+      >
+        Click
+      </button>
+      {visible && <SplitMe />}
+    </div>
+  )
+}
+```
+- [[ Code-Splitting | React ]](https://reactjs.org/docs/code-splitting.html)
+- [[ Loadable Components ]](https://loadable-components.com/)
