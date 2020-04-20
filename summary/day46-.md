@@ -306,3 +306,18 @@ function App() {
 ```
 - [[ Code-Splitting | React ]](https://reactjs.org/docs/code-splitting.html)
 - [[ Loadable Components ]](https://loadable-components.com/)
+
+<br>
+
+#### 200420 Day 54 - 538~554p
+자바스크립트가 실행되어야 초기 화면(UI)가 완성되어 보이는 서비스에서, 화면 랜더링을 브라우저 대신 서버에서 실행하여 사용자에게 보여주는 것이 서버 사이드 랜더링. 검색 엔진 최적화와 초기 렌더링 성능을 개선할 수 있지만 서버가 담당하는 작업이 늘어나면서 과부하가 발생할 수 있고, 코드 스플리팅과 함께 사용하기 까다롭다. <br>
+서버에서 리액트 컴포넌트를 렌더링 할 때는 ReactDOMServer의 renderToString이라는 함수를 사용한다. 함수에 JSX를 넣어 호출하면 렌더링 결과를 문자열로 반환한다.
+```jsx
+import ReactDOMServer from 'react-dom/server';
+
+const html = ReactDOMServer.renderToString(<div>Hello Server Side Rendering!</div>);
+```
+- [[ ReactDOMServer | React ]](https://ko.reactjs.org/docs/react-dom-server.html)
+- [[ Mode | Webpack ]](https://webpack.js.org/configuration/mode/)
+- [[ Webpack node modules externals ]](https://github.com/liady/webpack-node-externals)
+- [[ Externals | Webpack ]](https://webpack.js.org/configuration/externals/)
