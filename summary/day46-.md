@@ -321,3 +321,9 @@ const html = ReactDOMServer.renderToString(<div>Hello Server Side Rendering!</di
 - [[ Mode | Webpack ]](https://webpack.js.org/configuration/mode/)
 - [[ Webpack node modules externals ]](https://github.com/liady/webpack-node-externals)
 - [[ Externals | Webpack ]](https://webpack.js.org/configuration/externals/)
+
+<br>
+
+#### 200421 Day 55 - 555~562p
+- [[ <StaticRouter> | React Router ]](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/StaticRouter.md)
+- [[ Express에서 정적 파일 제공 | Express]](https://expressjs.com/ko/starter/static-files.html)
