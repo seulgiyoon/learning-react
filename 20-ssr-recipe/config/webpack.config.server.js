@@ -61,7 +61,7 @@ module.exports = {
             loader: require.resolve('css-loader'),
             options: {
               // true로 설정 시 실제 CSS 파일은 생성하지 않는다
-              exportOnlyLocals: true
+              onlyLocals: true
             }
           },
           {
@@ -69,7 +69,7 @@ module.exports = {
             loader: require.resolve('css-loader'),
             options: {
               modules: true,
-              exportOnlyLocals: true,
+              onlyLocals: true,
               getLocalIdent: getCSSModuleLocalIdent
             }
           },
@@ -80,7 +80,7 @@ module.exports = {
               {
                 loader: require.resolve('css-loader'),
                 options: {
-                  exportOnlyLocals: true
+                  onlyLocals: true
                 }
               },
               require.resolve('sass-loader')
@@ -94,7 +94,7 @@ module.exports = {
                 loader: require.resolve('css-loader'),
                 options: {
                   modules: true,
-                  exportOnlyLocals: true,
+                  onlyLocals: true,
                   getLocalIdent: getCSSModuleLocalIdent
                 }
               },
