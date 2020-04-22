@@ -6,6 +6,7 @@ function Menu() {
     <ul>
       <li><Link to="/red">Red</Link></li>
       <li><Link to="/blue">Blue</Link></li>
+      <li><Link to="/users">Users</Link></li>
     </ul>
   )
 }
