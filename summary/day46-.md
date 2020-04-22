@@ -327,3 +327,24 @@ const html = ReactDOMServer.renderToString(<div>Hello Server Side Rendering!</di
 #### 200421 Day 55 - 555~562p
 - [[ <StaticRouter> | React Router ]](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/StaticRouter.md)
 - [[ Express에서 정적 파일 제공 | Express]](https://expressjs.com/ko/starter/static-files.html)
+
+<br>
+
+#### 200422 Day 56 - 563~570p
+서버 사이드 렌더링을 한다면 이미 있는 정보를 재요청하지 않게 처리하는 작업이 중요하다. 이 작업이 없다면 브라우저가 이미 있는 데이터를 감지하지 않고 불필요한 API 호출을 하게 되므로 트래픽이 낭비되고, 사용자 경험이 저하된다. (568p)
+```jsx
+function UserContainer({ users, getUsers }) {
+  useEffect(() => {
+    // 이미 users가 유효하다면 getUsers로 정보를 다시 요청하지 않는다.
+    if (users) return;
+    // 유효하지 않다면 데이터를 요청한다.
+    getUsers();
+  }, [users, getUsers]);
+
+  return (
+    <div>
+      <Users users={users} />
+    </div>
+  )
+}
+```
