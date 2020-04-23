@@ -348,3 +348,53 @@ function UserContainer({ users, getUsers }) {
   )
 }
 ```
+
+<br>
+
+#### 200423 Day 57 - 571~577p
+데이터 로딩 : 서버사이드 렌더링에서는 useEffect, componentDidMount가 호출되지 않으므로 렌더링 전에 API를 요청하여 데이터를 스토어에 담아야 한다. <br>
+첫 번째 렌더에서 API를 요청하여 데이터를 스토어에 담은 후, 두 번째 렌더에서 브라우저가 그 스토어 상태를 초기값으로 사용할 수 있도록 세팅한다.
+```js
+// index.server.js
+const serverRender = async (req, res, next) => {
+  const context = {};
+  // 요청이 들어올때마다 새로운 스토어를 만들게 된다
+  const store = createStore(rootReducer, applyMiddleware(thunk));
+
+  const preloadContext = {
+    done: false,
+    promises: []
+  };
+
+  const jsx = (
+    <PreloadContext.Provider value={preloadContext} >
+      <Provider store={store} >
+        <StaticRouter location={req.url} context={context}>
+          <App />
+        </StaticRouter>
+      </Provider>
+    </PreloadContext.Provider>
+  );
+  
+  // 첫번째 렌더링 - API를 통해 받아온 데이터를 렌더한다
+  ReactDOMServer.renderToStaticMarkup(jsx);
+  try {
+    // 배열 안에 든 모든 promise를 기다린다
+    await Promise.all(preloadContext.promises);
+  }
+  catch (error) {
+    return res.status(500)
+  }
+  preloadContext.done = true;
+
+  // 두번째 렌더링 - 만들어진 스토어의 상태를 브라우저에서 재사용한다(스토어 상태를 문자열로 변환하여 스크립트로 주입 - root에)
+  const root = ReactDOMServer.renderToString(jsx);
+  // store의 상태를 조회 -> JSON을 문자열로 변환 -> 악성 스크립트 실행을 막기 위해 '<'를 유니코드로 치환
+  const stateString = JSON.stringify(store.getState()).replace(/</g, '\\u003c');
+  // <script>로 스토어 초기 상태를 주입하기 위해서 변환
+  const stateScript = `<script>__PRELOADED_STATE__= ${stateString}</script>`;
+  res.send(createPage(root, stateScript));
+};
+```
+- [[ Server Rendering | Redux ]](https://redux.js.org/recipes/server-rendering)
+- [[ Server Rendering - Security Considerations | Redux ]](https://redux.js.org/recipes/server-rendering#security-considerations)
