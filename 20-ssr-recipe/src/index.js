@@ -8,7 +8,8 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import rootReducer from './modules';
 
-const store = createStore(rootReducer, applyMiddleware(thunk))
+// 서버사이드 렌더링으로 데이터를 스토어에 세팅한 초기 상태를 브라우저에서 사용하도록 __PRELOADED_STATE__를 세팅
+const store = createStore(rootReducer, window.__PRELOADED_STATE__, applyMiddleware(thunk))
 
 ReactDOM.render(
   <React.StrictMode>

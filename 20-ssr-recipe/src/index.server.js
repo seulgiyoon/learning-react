@@ -5,6 +5,11 @@ import { StaticRouter } from 'react-router-dom';
 import App from './App';
 import path from 'path';
 import fs from 'fs';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import rootReducer from './modules';
+import PreloadContext from './lib/PreloadContext';
 
 // build 폴더 안 asset-manifest.json에서 파일들의 경로를 조회
 const manifest = JSON.parse(
@@ -16,7 +21,7 @@ const chunks = Object.keys(manifest.files)
 .map(key => `<script src="${manifest.files[key]}"></script>`) // script 태그로 변환
 .join('') // 합치기
 
-function createPage(root) {
+function createPage(root, stateScript) {
   return `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -35,6 +40,7 @@ function createPage(root) {
       <div id="root">
         ${root}
       </div>
+      ${stateScript}
       <script src="${manifest.files['runtime-main.js']}"></script>
       ${chunks}
       <script src="${manifest.files['main.js']}"></script>
@@ -45,16 +51,46 @@ function createPage(root) {
 
 const app = express();
 
-const serverRender = (req, res, next) => {
+const serverRender = async (req, res, next) => {
   const context = {};
+  // 요청이 들어올때마다 새로운 스토어를 만들게 된다
+  const store = createStore(rootReducer, applyMiddleware(thunk));
+
+  const preloadContext = {
+    done: false,
+    promises: []
+  };
+
   const jsx = (
-    <StaticRouter location={req.url} context={context}>
-      <App />
-    </StaticRouter>
+    <PreloadContext.Provider value={preloadContext} >
+      <Provider store={store} >
+        <StaticRouter location={req.url} context={context}>
+          <App />
+        </StaticRouter>
+      </Provider>
+    </PreloadContext.Provider>
   );
+  
+  // 첫번째 렌더링 - API를 통해 받아온 데이터를 렌더한다
+  ReactDOMServer.renderToStaticMarkup(jsx);
+  try {
+    // 배열 안에 든 모든 promise를 기다린다
+    await Promise.all(preloadContext.promises);
+  }
+  catch (error) {
+    return res.status(500)
+  }
+  preloadContext.done = true;
+
+  // 두번째 렌더링 - 만들어진 스토어의 상태를 브라우저에서 재사용한다(스토어 상태를 문자열로 변환하여 스크립트로 주입 - root에)
   const root = ReactDOMServer.renderToString(jsx);
-  res.send(createPage(root));
-}
+  // store의 상태를 조회 -> JSON을 문자열로 변환 -> 악성 스크립트 실행을 막기 위해 '<'를 유니코드로 치환
+  const stateString = JSON.stringify(store.getState()).replace(/</g, '\\u003c');
+  // <script>로 스토어 초기 상태를 주입하기 위해서 변환
+  const stateScript = `<script>__PRELOADED_STATE__= ${stateString}</script>`;
+  res.send(createPage(root, stateScript));
+};
+
 
 // build 폴더 안의 js, css 정적 파일에 접근할 수 있도록 설정
 const serve = express.static(path.resolve('./build'), {

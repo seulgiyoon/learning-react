@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Users from '../components/Users';
 import { connect } from 'react-redux';
 import { getUsers } from '../modules/users';
+import { Preloader } from '../lib/PreloadContext';
 
 function UserContainer({ users, getUsers }) {
   useEffect(() => {
@@ -13,6 +14,7 @@ function UserContainer({ users, getUsers }) {
   return (
     <div>
       <Users users={users} />
+      <Preloader resolve={getUsers} />
     </div>
   )
 }
