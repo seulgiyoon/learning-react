@@ -333,7 +333,7 @@ const html = ReactDOMServer.renderToString(<div>Hello Server Side Rendering!</di
 #### 200422 Day 56 - 563~570p
 서버 사이드 렌더링을 한다면 이미 있는 정보를 재요청하지 않게 처리하는 작업이 중요하다. 이 작업이 없다면 브라우저가 이미 있는 데이터를 감지하지 않고 불필요한 API 호출을 하게 되므로 트래픽이 낭비되고, 사용자 경험이 저하된다. (568p)
 ```jsx
-function UserContainer({ users, getUsers }) {
+function UsersContainer({ users, getUsers }) {
   useEffect(() => {
     // 이미 users가 유효하다면 getUsers로 정보를 다시 요청하지 않는다.
     if (users) return;
@@ -398,3 +398,8 @@ const serverRender = async (req, res, next) => {
 ```
 - [[ Server Rendering | Redux ]](https://redux.js.org/recipes/server-rendering)
 - [[ Server Rendering - Security Considerations | Redux ]](https://redux.js.org/recipes/server-rendering#security-considerations)
+
+<br>
+
+#### 200424 Day 58 - 578~583p
+redux-saga를 이용하는 경우 서버사이드 렌더링 방법 익히기. 우선 기본적인 데이터 흐름을 만들었음.
