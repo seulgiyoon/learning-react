@@ -6,10 +6,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import rootReducer from './modules';
+import createSagaMiddleware from 'redux-saga';
+import rootReducer, { rootSaga } from './modules';
+
+const sagaMiddleware = createSagaMiddleware();
 
 // 서버사이드 렌더링으로 데이터를 스토어에 세팅한 초기 상태를 브라우저에서 사용하도록 __PRELOADED_STATE__를 세팅
-const store = createStore(rootReducer, window.__PRELOADED_STATE__, applyMiddleware(thunk))
+const store = createStore(rootReducer, window.__PRELOADED_STATE__, applyMiddleware(thunk, sagaMiddleware));
+sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <React.StrictMode>
