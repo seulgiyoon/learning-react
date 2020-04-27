@@ -8,8 +8,10 @@ import fs from 'fs';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import rootReducer from './modules';
 import PreloadContext from './lib/PreloadContext';
+import createSagaMiddleware from 'redux-saga';
+import rootReducer, { rootSaga } from './modules';
+import { END } from 'redux-saga';
 
 // build 폴더 안 asset-manifest.json에서 파일들의 경로를 조회
 const manifest = JSON.parse(
@@ -53,8 +55,13 @@ const app = express();
 
 const serverRender = async (req, res, next) => {
   const context = {};
+  const sagaMiddleware = createSagaMiddleware();
+
   // 요청이 들어올때마다 새로운 스토어를 만들게 된다
-  const store = createStore(rootReducer, applyMiddleware(thunk));
+  const store = createStore(rootReducer, applyMiddleware(thunk, sagaMiddleware));
+
+  // .toPromise는 middleware.run으로 만든 task를 Promise로 바꾸어 리턴한다.
+  const sagaPromise = sagaMiddleware.run(rootSaga).toPromise();
 
   const preloadContext = {
     done: false,
@@ -73,7 +80,11 @@ const serverRender = async (req, res, next) => {
   
   // 첫번째 렌더링 - API를 통해 받아온 데이터를 렌더한다
   ReactDOMServer.renderToStaticMarkup(jsx);
+  // store에 dispatch로 END 액션을 발생시키면 액션을 모니터링하는 사가들이 모두 종료된다.
+  store.dispatch(END);
   try {
+    // 기존에 진행중이던 사가들이 모두 끝날 때까지 기다린다
+    await sagaPromise;
     // 배열 안에 든 모든 promise를 기다린다
     await Promise.all(preloadContext.promises);
   }
